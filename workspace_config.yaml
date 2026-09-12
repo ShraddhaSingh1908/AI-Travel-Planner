@@ -1,0 +1,14 @@
+spec_version: "1.0"
+
+folder_paths:
+  agents: .\agents
+  tools: .\tools
+  connections: .\connections
+  knowledge_bases: .\knowledge-bases
+  toolkits: .\toolkits
+  models: .\models
+
+models:
+  - name: ibm/granite-3-8b-instruct
+    provider: watsonx
+    project_id:4912150a-26a4-45dd-b1f8-2c3a03e417ef
