@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Group Travel — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">👥 Group Travel Manager</div>
+      <div class="card-sub">Plan group trips, manage members, and split expenses fairly with the AI expense splitter.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem" class="form-grid-2">
+      <!-- Trip Setup -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:1rem">🗺️ Trip Setup</h3>
+        <div class="form-group">
+          <label class="form-label">Trip Name</label>
+          <input type="text" class="form-input" id="tripName" value="Goa Getaway 2025" placeholder="e.g. Goa Trip Dec"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Destination</label>
+          <input type="text" class="form-input" id="groupDest" value="Goa, India" placeholder="Where are you going?"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Travel Dates</label>
+          <div style="display:flex;gap:0.6rem">
+            <input type="date" class="form-input" id="groupStart"/>
+            <input type="date" class="form-input" id="groupEnd"/>
+          </div>
+        </div>
+        <h4 style="margin:0.8rem 0 0.6rem">👤 Members</h4>
+        <div id="memberList" style="margin-bottom:0.8rem;display:flex;flex-direction:column;gap:0.4rem"></div>
+        <div style="display:flex;gap:0.5rem">
+          <input type="text" class="form-input" id="newMember" placeholder="Add member name…"/>
+          <button class="btn btn-primary btn-sm" onclick="addMember()">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Expense Splitter -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:0.4rem">💰 Expense Splitter</h3>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:1rem">Track group expenses and split them equally.</p>
+
+        <div class="table-wrap" style="margin-bottom:1rem">
+          <table class="data-table">
+            <thead><tr><th>Member</th><th>Paid (INR)</th><th>Share</th><th>Balance</th></tr></thead>
+            <tbody id="splitTable"></tbody>
+          </table>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Total Group Expense (INR)</label>
+          <input type="number" class="form-input" id="totalExpense" value="24000" step="100" min="0" oninput="splitEqually()"/>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="splitEqually()">
+          ⚖️ Split Equally
+        </button>
+
+        <div id="perPersonBox" style="
+          margin-top:1rem;
+          background:var(--surface);
+          border:1px solid var(--border);
+          border-radius:10px;
+          padding:1rem;
+          text-align:center;
+          display:none;
+        ">
+          <div style="color:var(--text-light);font-size:0.85rem">Per Person Share</div>
+          <div id="perPersonAmt" style="font-size:2rem;font-weight:800;color:var(--primary)">₹0</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  let members = ['Ravi', 'Priya', 'Arjun', 'Sneha'];
+  let paid = [8500, 6200, 5100, 4200];
+
+  function renderMembers() {
+    document.getElementById('memberList').innerHTML = members.map((m, i) => `
+      <div style="display:flex;align-items:center;gap:0.5rem;background:var(--surface);padding:0.4rem 0.7rem;border-radius:8px;border:1px solid var(--border)">
+        <span style="font-size:1rem">👤</span>
+        <span style="flex:1;font-size:0.9rem;font-weight:500">${m}</span>
+        <button onclick="removeMember(${i})" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:0.9rem;padding:0.2rem 0.4rem">✕</button>
+      </div>`).join('');
+    splitEqually();
+  }
+
+  function addMember() {
+    const inp = document.getElementById('newMember');
+    const name = inp.value.trim();
+    if (!name) return;
+    members.push(name);
+    paid.push(0);
+    inp.value = '';
+    renderMembers();
+  }
+
+  function removeMember(i) {
+    members.splice(i, 1);
+    paid.splice(i, 1);
+    renderMembers();
+  }
+
+  function splitEqually() {
+    const total = parseFloat(document.getElementById('totalExpense').value) || 0;
+    const share = members.length ? Math.round(total / members.length) : 0;
+    const rows = members.map((m, i) => {
+      const balance = paid[i] - share;
+      const color = balance >= 0 ? 'var(--success)' : 'var(--error)';
+      const sign = balance >= 0 ? '+' : '';
+      return `<tr>
+        <td>${m}</td>
+        <td>₹${paid[i].toLocaleString()}</td>
+        <td>₹${share.toLocaleString()}</td>
+        <td style="color:${color};font-weight:600">${sign}₹${balance.toLocaleString()}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('splitTable').innerHTML = rows;
+    document.getElementById('perPersonAmt').textContent = `₹${share.toLocaleString()}`;
+    document.getElementById('perPersonBox').style.display = 'block';
+  }
+
+  window.addEventListener('load', () => {
+    const d1 = new Date(); d1.setDate(d1.getDate() + 14);
+    const d2 = new Date(); d2.setDate(d2.getDate() + 18);
+    document.getElementById('groupStart').value = d1.toISOString().split('T')[0];
+    document.getElementById('groupEnd').value = d2.toISOString().split('T')[0];
+    renderMembers();
+  });
+</script>
+</body>
+</html>

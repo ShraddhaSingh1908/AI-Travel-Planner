@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Safety &amp; Emergency — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">🛡️ Safety &amp; Emergency</div>
+      <div class="card-sub">Essential emergency contacts and safety tips for your destination country.</div>
+    </div>
+
+    <!-- SOS Button -->
+    <div style="margin-top:1.2rem;text-align:center">
+      <button style="
+        background:#ef4444;
+        color:#fff;
+        border:none;
+        border-radius:50px;
+        padding:1rem 3rem;
+        font-size:1.3rem;
+        font-weight:800;
+        cursor:pointer;
+        letter-spacing:0.08em;
+        box-shadow:0 4px 20px rgba(239,68,68,0.4);
+        transition:all 0.2s;
+      " onclick="alert('SOS triggered! In a real app this would call emergency services or alert your contacts.')">
+        🆘 SOS — CALL FOR HELP
+      </button>
+      <p style="color:var(--text-light);font-size:0.8rem;margin-top:0.6rem">Tap to alert emergency contacts &amp; services</p>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.4rem">
+      <div class="form-group" style="max-width:360px;margin-bottom:0">
+        <label class="form-label" style="font-size:1rem;font-weight:600">🌍 Select Country</label>
+        <select class="form-select" id="countrySelect" onchange="showEmergency(this.value)">
+          <option value="India">🇮🇳 India</option>
+          <option value="UAE">🇦🇪 UAE</option>
+          <option value="Thailand">🇹🇭 Thailand</option>
+          <option value="USA">🇺🇸 USA</option>
+          <option value="UK">🇬🇧 United Kingdom</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem" id="emergencyCard">
+      <div id="emergencyContent"></div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🛡️ Travel Safety Tips</h3>
+      <ul style="line-height:2;padding-left:1.2rem;font-size:0.95rem">
+        <li>Always keep a <b>photocopy of your passport</b> and store the digital copy in cloud storage.</li>
+        <li>Share your <b>live location and itinerary</b> with a trusted person back home.</li>
+        <li>Keep <b>emergency cash</b> (₹2,000–5,000) separate from your main wallet.</li>
+        <li>Avoid travelling alone at <b>night in unfamiliar areas</b> — use registered cabs or hotel transport.</li>
+        <li>Purchase <b>travel insurance</b> covering medical emergencies, trip cancellations, and baggage loss.</li>
+        <li>Save the <b>local emergency numbers</b> in your phone before you land — do not rely on memory.</li>
+      </ul>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  const EMERGENCY = {
+    India:    { police:'100', ambulance:'108', fire:'101', tourist:'1363', note:'Tourist Helpline is available 24/7 in multiple languages.' },
+    UAE:      { police:'999', ambulance:'998', fire:'997', tourist:'800-DUBAI (38224)', note:'Dubai Tourism Police are highly responsive and tourist-friendly.' },
+    Thailand: { police:'191', ambulance:'1669', fire:'199', tourist:'1155', note:'Tourist Police (1155) speak English and can assist with crimes and scams.' },
+    USA:      { police:'911', ambulance:'911', fire:'911', tourist:'1-800-CALL-FBI', note:'All emergencies go through 911. Indian Embassy: +1-202-939-7000.' },
+    UK:       { police:'999', ambulance:'999', fire:'999', tourist:'101 (non-emergency)', note:'For non-emergencies call 101. Indian High Commission: +44-20-7836-8484.' },
+  };
+
+  function showEmergency(country) {
+    const e = EMERGENCY[country];
+    if (!e) return;
+    document.getElementById('emergencyContent').innerHTML = `
+      <h3 style="margin-bottom:1.2rem">🚨 Emergency Numbers — ${country}</h3>
+      <div class="metrics-row" style="margin-bottom:1.2rem">
+        <div class="metric-card" style="border-left:4px solid #3b82d4">
+          <div style="font-size:1.8rem;margin-bottom:0.2rem">👮</div>
+          <div class="metric-value">${e.police}</div>
+          <div class="metric-label">Police</div>
+        </div>
+        <div class="metric-card" style="border-left:4px solid #ef4444">
+          <div style="font-size:1.8rem;margin-bottom:0.2rem">🚑</div>
+          <div class="metric-value">${e.ambulance}</div>
+          <div class="metric-label">Ambulance</div>
+        </div>
+        <div class="metric-card" style="border-left:4px solid #f59e0b">
+          <div style="font-size:1.8rem;margin-bottom:0.2rem">🔥</div>
+          <div class="metric-value">${e.fire}</div>
+          <div class="metric-label">Fire Brigade</div>
+        </div>
+        <div class="metric-card" style="border-left:4px solid #10b981">
+          <div style="font-size:1.8rem;margin-bottom:0.2rem">📞</div>
+          <div class="metric-value" style="font-size:1rem">${e.tourist}</div>
+          <div class="metric-label">Tourist Helpline</div>
+        </div>
+      </div>
+      <div class="info-box">💡 ${e.note}</div>
+    `;
+  }
+  window.addEventListener('load', () => showEmergency('India'));
+</script>
+</body>
+</html>

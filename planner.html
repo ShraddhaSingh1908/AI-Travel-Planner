@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Trip Planner — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html" class="active">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ LAYOUT ═══════════ -->
+<div class="page-layout">
+
+  <!-- ════════ SIDEBAR — IBM Engine Control ════════ -->
+  <aside class="sidebar">
+
+    <!-- IBM branding -->
+    <div class="sidebar-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/>
+    </div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+
+    <!-- IBM Credentials -->
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+
+    <div class="form-group">
+      <label class="form-label" for="ibmApiKey">
+        IBM IAM API Key
+        <span title="Store in .streamlit/secrets.toml as IBM_API_KEY" style="cursor:help;color:var(--text-light)"> ⓘ</span>
+      </label>
+      <div style="position:relative;display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…" autocomplete="off"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" title="Show/Hide" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="watsonxProjectId">
+        watsonx Project ID
+        <span title="Store in .streamlit/secrets.toml as WATSONX_PROJECT_ID" style="cursor:help;color:var(--text-light)"> ⓘ</span>
+      </label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="cloudRegion">Cloud Region</label>
+      <select class="form-select" id="cloudRegion">
+        <option value="us-south">us-south</option>
+        <option value="eu-de">eu-de</option>
+        <option value="eu-gb">eu-gb</option>
+        <option value="jp-tok">jp-tok</option>
+      </select>
+    </div>
+
+    <!-- Secrets Status -->
+    <div class="sidebar-section" style="margin-top:0.4rem">🔒 Secrets Status</div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b> — manual input<br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b> — manual input<br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — not configured ⚠️
+    </div>
+
+    <hr class="sidebar-divider"/>
+
+    <!-- Agent Parameters -->
+    <div class="sidebar-section">🎛️ Agent Parameters</div>
+
+    <div class="form-group">
+      <label class="form-label" for="temperature">
+        Creativity (Temperature)
+        <span class="slider-value" id="temperature_val">0.7</span>
+      </label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="maxTokens">
+        Max Output Tokens
+        <span class="slider-value" id="maxTokens_val">1500</span>
+      </label>
+      <input type="range" class="form-slider" id="maxTokens" min="300" max="2500" step="100" value="1500"/>
+      <div class="slider-labels"><span>300</span><span>2500</span></div>
+    </div>
+
+    <hr class="sidebar-divider"/>
+
+    <!-- Trip Parameters -->
+    <div class="sidebar-section">👥 Trip Parameters</div>
+
+    <div class="form-group">
+      <label class="form-label" for="numTravellers">Number of Travellers</label>
+      <input type="number" class="form-input" id="numTravellers" min="1" max="20" value="1"/>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="openWeatherKey">
+        OpenWeather API Key
+        <span title="Get free key at openweathermap.org" style="cursor:help;color:var(--text-light)"> ⓘ</span>
+      </label>
+      <input type="password" class="form-input" id="openWeatherKey" placeholder="Optional — for live weather"/>
+    </div>
+
+    <hr class="sidebar-divider"/>
+
+    <!-- Info -->
+    <div class="sidebar-info">
+      🔒 Credentials stored in<br/>
+      &nbsp;&nbsp;<code>.streamlit/secrets.toml</code><br/>
+      🤖 Model: <b>ibm/granite-4-h-small</b><br/>
+      🌐 Weather: OpenWeatherMap API<br/>
+      🖼️ Images: Unsplash / Wikimedia<br/>
+      💰 Budget: auto-allocated across<br/>
+      &nbsp;&nbsp;accommodation · food · transport<br/>
+      &nbsp;&nbsp;local travel · sightseeing
+    </div>
+
+  </aside>
+  <!-- ════════ END SIDEBAR ════════ -->
+
+  <!-- ════════ MAIN CONTENT ════════ -->
+  <main class="page-content">
+
+    <!-- Trip Configurator card -->
+    <div class="glass-card">
+      <div class="card-header">✈️ Trip Configurator</div>
+      <div class="card-sub">Choose a destination, set your budget, and let IBM Granite build your perfect itinerary.</div>
+    </div>
+
+    <!-- Quick Pick chips -->
+    <p style="font-weight:700;margin-bottom:0.6rem">🔥 Quick Pick:</p>
+    <div class="chips-row">
+      <span class="chip" data-dest="Goa">🏖️ Goa</span>
+      <span class="chip" data-dest="Manali">🏔️ Manali</span>
+      <span class="chip" data-dest="Jaipur">🏰 Jaipur</span>
+      <span class="chip" data-dest="Kerala">🌴 Kerala</span>
+      <span class="chip" data-dest="Mumbai">🏙️ Mumbai</span>
+      <span class="chip" data-dest="Agra">🕌 Agra</span>
+      <span class="chip" data-dest="Varanasi">🛕 Varanasi</span>
+      <span class="chip" data-dest="Leh Ladakh">🏔️ Leh Ladakh</span>
+    </div>
+
+    <!-- Planner form -->
+    <form id="plannerForm">
+      <div class="form-grid-3" style="margin-bottom:1rem">
+
+        <!-- Column 1 -->
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="originCity">🛫 Origin City</label>
+            <input type="text" class="form-input" id="originCity" value="Delhi" placeholder="e.g. Delhi, Mumbai…"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="destinationSelect">🛬 Destination City</label>
+            <select class="form-select" id="destinationSelect">
+              <option value="Goa">Goa</option>
+              <option value="Manali">Manali</option>
+              <option value="Jaipur">Jaipur</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Agra">Agra</option>
+              <option value="Varanasi">Varanasi</option>
+              <option value="Leh Ladakh">Leh Ladakh</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customDest">✏️ Or type a custom destination</label>
+            <input type="text" class="form-input" id="customDest" placeholder="e.g. Shimla, Rishikesh, Udaipur…"/>
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="duration">📅 Duration (Days)</label>
+            <input type="number" class="form-input" id="duration" min="1" max="14" value="3"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="budget">💰 Total Budget (INR)</label>
+            <input type="number" class="form-input" id="budget" min="3000" step="1000" value="20000"/>
+          </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="hotelBudget">🏨 Max Hotel / Night (INR)</label>
+            <input type="number" class="form-input" id="hotelBudget" min="1000" step="500" value="4500"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="travelStyle">✨ Travel Style</label>
+            <select class="form-select" id="travelStyle">
+              <option>Relaxed &amp; Chill</option>
+              <option>Action-Packed Adventure</option>
+              <option>Cultural Explorer</option>
+              <option>Luxury &amp; Pampering</option>
+              <option>Budget Backpacker</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Alert area -->
+      <div id="plannerAlert" class="alert alert-error" style="display:none"></div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:1.05rem;padding:0.9rem">
+        🚀 Generate My AI Travel Plan
+      </button>
+    </form>
+
+    <!-- ════ DASHBOARD (shown after generation) ════ -->
+    <div id="tripDashboard" style="display:none;margin-top:2rem">
+
+      <!-- Metrics row -->
+      <div class="metrics-row" id="tripMetrics"></div>
+
+      <!-- Tabs -->
+      <div class="tabs-nav" data-tabs="planner">
+        <button class="tab-btn active" data-panel="tab-itinerary" data-group="planner">✨ AI Itinerary</button>
+        <button class="tab-btn" data-panel="tab-map" data-group="planner">🗺️ Route Map</button>
+        <button class="tab-btn" data-panel="tab-budget" data-group="planner">📊 Budget</button>
+        <button class="tab-btn" data-panel="tab-weather" data-group="planner">🌦️ Weather &amp; Packing</button>
+        <button class="tab-btn" data-panel="tab-chat" data-group="planner">💬 AI Concierge</button>
+      </div>
+
+      <!-- Tab 1: Itinerary -->
+      <div class="tab-panel active" id="tab-itinerary" data-group="planner">
+        <div id="plannerResult"></div>
+
+        <div class="form-grid-2" style="margin-top:1.5rem;gap:1.5rem">
+          <div>
+            <h4 style="margin-bottom:0.7rem">✈️ Available Flights</h4>
+            <div id="flightTable"></div>
+          </div>
+          <div>
+            <h4 style="margin-bottom:0.7rem">🏨 Hotel Options</h4>
+            <div id="hotelTable"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem">
+          <h4 style="margin-bottom:0.7rem">📋 Booking Alerts</h4>
+          <div class="form-group" style="max-width:260px">
+            <label class="form-label" for="travelDate">📅 Select Travel Date</label>
+            <input type="date" class="form-input" id="travelDate"/>
+          </div>
+          <div id="bookingAlert" class="alert alert-info" style="display:none"></div>
+          <div class="form-group" style="display:flex;align-items:center;gap:0.6rem;margin-top:0.7rem">
+            <input type="checkbox" id="bookingConfirmed" style="accent-color:var(--primary);width:16px;height:16px;cursor:pointer"/>
+            <label for="bookingConfirmed" style="cursor:pointer;font-size:0.92rem">✅ Mark flights &amp; hotel as booked</label>
+          </div>
+          <div id="bookingMsg" class="alert alert-success" style="display:none">
+            🎉 <b>Booking confirmed!</b> Have a wonderful trip!
+          </div>
+        </div>
+
+        <div style="margin-top:1.2rem">
+          <button onclick="downloadItinerary()" class="btn btn-outline" style="font-size:0.88rem">
+            📥 Download Itinerary (.md)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 2: Map -->
+      <div class="tab-panel" id="tab-map" data-group="planner">
+        <h3 style="margin-bottom:0.5rem">🗺️ Destination Map</h3>
+        <p class="text-muted" style="margin-bottom:1rem;font-size:0.88rem">Key attractions and points of interest at your destination.</p>
+        <div id="mapContainer">
+          🗺️ Interactive map — open in the Streamlit app for full PyDeck map functionality.
+        </div>
+        <div id="spotsTable" style="margin-top:1rem"></div>
+      </div>
+
+      <!-- Tab 3: Budget -->
+      <div class="tab-panel" id="tab-budget" data-group="planner">
+        <h3 style="margin-bottom:0.3rem">📊 Financial &amp; Cost Breakdown</h3>
+        <p class="text-muted" style="margin-bottom:1.2rem;font-size:0.88rem">Estimated allocation across all spend categories.</p>
+        <div id="budgetContent"></div>
+      </div>
+
+      <!-- Tab 4: Weather & Packing -->
+      <div class="tab-panel" id="tab-weather" data-group="planner">
+        <h3 style="margin-bottom:0.5rem">🌤️ Live Weather</h3>
+        <div class="info-box">ℹ️ Enter your <b>OpenWeather API Key</b> in the sidebar for live weather data.</div>
+        <div class="weather-row">
+          <div class="weather-card"><div class="wc-label">🌡️ Temperature</div><div class="wc-value">26.0°<span class="wc-unit">C</span></div></div>
+          <div class="weather-card"><div class="wc-label">🌤️ Condition</div><div class="wc-value" style="font-size:1.1rem">Partly Cloudy</div></div>
+          <div class="weather-card"><div class="wc-label">💧 Humidity</div><div class="wc-value">60<span class="wc-unit">%</span></div></div>
+          <div class="weather-card"><div class="wc-label">💨 Wind Speed</div><div class="wc-value">12<span class="wc-unit"> m/s</span></div></div>
+        </div>
+        <div id="packingContent"></div>
+      </div>
+
+      <!-- Tab 5: AI Concierge -->
+      <div class="tab-panel" id="tab-chat" data-group="planner">
+        <h3 style="margin-bottom:0.3rem">💬 AI Travel Concierge</h3>
+        <p class="text-muted" style="margin-bottom:1rem;font-size:0.88rem">Ask questions, request changes, or explore alternatives — powered by IBM Granite 4.</p>
+        <div class="chat-area">
+          <div class="chat-messages-full" id="chatMessages">
+            <div class="chat-msg-full">
+              <div class="chat-avatar-sm">🤖</div>
+              <div class="chat-bubble ai">Hi! I'm your AI Concierge. How can I improve your trip? 🌍 Ask me about food, activities, budget tips, or packing!</div>
+            </div>
+          </div>
+          <form id="chatForm" class="chat-input-bar">
+            <input type="text" id="chatInput" placeholder="e.g. 'Add vegetarian street food for Day 1' or 'What to pack for Manali in December?'"/>
+            <button type="submit" class="btn btn-primary btn-sm">Send →</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    <!-- END DASHBOARD -->
+
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab" title="Open AI Assistant">💬</a>
+
+<script src="assets/main.js"></script>
+<script>
+  // Set default travel date to 14 days from today
+  window.addEventListener('load', () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    const dateInput = document.getElementById('travelDate');
+    if (dateInput) dateInput.value = d.toISOString().split('T')[0];
+    updateBookingAlert();
+
+    // Show packing list immediately with default weather
+    renderPackingList(26, 'Partly Cloudy');
+  });
+
+  function downloadItinerary() {
+    const text = sessionStorage.getItem('itinerary');
+    const dest = JSON.parse(sessionStorage.getItem('currentTrip') || '{}').destination || 'Trip';
+    if (!text) { alert('Generate a trip plan first!'); return; }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/markdown' }));
+    a.download = `${dest}_Itinerary.md`;
+    a.click();
+  }
+</script>
+</body>
+</html>

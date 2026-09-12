@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Food &amp; Dining — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">🍽️ Food &amp; Dining</div>
+      <div class="card-sub">Discover local delicacies and must-try dishes at each destination — curated by IBM Granite AI.</div>
+    </div>
+
+    <div style="margin-top:1.2rem">
+      <p style="font-weight:700;margin-bottom:0.6rem">🌍 Select Destination:</p>
+      <div class="chips-row" id="destChips">
+        <span class="chip active" onclick="showFood('Goa')">🏖️ Goa</span>
+        <span class="chip" onclick="showFood('Manali')">🏔️ Manali</span>
+        <span class="chip" onclick="showFood('Jaipur')">🏰 Jaipur</span>
+        <span class="chip" onclick="showFood('Kerala')">🌴 Kerala</span>
+        <span class="chip" onclick="showFood('Mumbai')">🏙️ Mumbai</span>
+      </div>
+    </div>
+
+    <div id="foodSection" style="margin-top:1.5rem">
+      <h3 style="margin-bottom:1rem" id="foodTitle">🏖️ Goa — Must-Try Dishes</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem" id="foodGrid"></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  const FOOD_DATA = {
+    Goa: [
+      { emoji:'🦞', name:'Goan Fish Curry', desc:'Coconut-based tangy curry with fresh catch of the day — the soul of Goan cuisine.', price:'₹180–350' },
+      { emoji:'🥩', name:'Pork Vindaloo', desc:'Fiery, tangy pork dish marinated in vinegar & spices. A Portuguese-Goan classic.', price:'₹220–400' },
+      { emoji:'🍤', name:'Prawn Balchão', desc:'Spicy-sour prawn pickle tossed in a bold red masala sauce.', price:'₹250–450' },
+      { emoji:'🍞', name:'Goan Poi Bread', desc:'Soft, fluffy local bread best enjoyed with butter or fish curry.', price:'₹20–50' },
+      { emoji:'🍰', name:'Bebinca', desc:'Traditional Goan layered coconut pudding — the king of Goan desserts.', price:'₹80–150' },
+      { emoji:'🍹', name:'Feni Cocktail', desc:'Cashew or coconut feni — the iconic Goan spirit, sipped straight or mixed.', price:'₹80–200' },
+    ],
+    Manali: [
+      { emoji:'🥘', name:'Sidu', desc:'Fluffy Himachali bread stuffed with poppy seeds & walnuts, served with ghee.', price:'₹60–120' },
+      { emoji:'🍲', name:'Dham', desc:'A festive meal of rice, dal, rajma, curd & meetha bhath — cooked by brahmin chefs.', price:'₹150–300' },
+      { emoji:'🥣', name:'Tudkiya Bhath', desc:'Flavourful rice cooked with lentils, potatoes and spices in an earthen pot.', price:'₹100–180' },
+      { emoji:'🫕', name:'Chha Gosht', desc:'Lamb marinated in yoghurt and gram flour, slow-cooked with spices.', price:'₹280–450' },
+      { emoji:'🍜', name:'Tibetan Thukpa', desc:'Hearty noodle soup with vegetables or chicken — warming after mountain treks.', price:'₹80–150' },
+      { emoji:'🥟', name:'Momos', desc:'Steamed or fried dumplings with veg or meat filling, served with red chutney.', price:'₹60–120' },
+    ],
+    Jaipur: [
+      { emoji:'🥣', name:'Dal Baati Churma', desc:'Baked wheat balls in ghee with lentil curry and sweet churma — a Rajasthani staple.', price:'₹120–250' },
+      { emoji:'🌮', name:'Pyaaz Kachori', desc:'Crispy deep-fried pastry stuffed with spiced onion mixture — breakfast favourite.', price:'₹20–40' },
+      { emoji:'🍛', name:'Laal Maas', desc:'Fiery red mutton curry cooked with mathania chillis and dry spices.', price:'₹320–550' },
+      { emoji:'🧁', name:'Ghewar', desc:'Round honey-soaked cake made with flour, milk and saffron — Rajasthani sweet.', price:'₹60–150' },
+      { emoji:'🥤', name:'Lassi', desc:'Thick, creamy curd-based drink — sweet or salted — the perfect cooler.', price:'₹40–80' },
+      { emoji:'🌯', name:'Kathi Kebab Roll', desc:'Grilled seekh kebab wrapped in flaky paratha with onions and green chutney.', price:'₹80–160' },
+    ],
+    Kerala: [
+      { emoji:'🐟', name:'Kerala Fish Curry', desc:'Spicy coconut milk curry with kudampuli (gamboge) — a tangy coastal classic.', price:'₹150–300' },
+      { emoji:'🍚', name:'Sadya', desc:'Elaborate 24-dish banana-leaf feast served during Onam — a must experience.', price:'₹200–500' },
+      { emoji:'🥞', name:'Appam & Stew', desc:'Lacy rice hoppers served with coconut milk vegetable or chicken stew.', price:'₹80–180' },
+      { emoji:'🍢', name:'Puttu & Kadala', desc:'Steamed rice cake with black chickpea curry — a beloved Kerala breakfast.', price:'₹50–100' },
+      { emoji:'🦐', name:'Karimeen Pollichathu', desc:'Pearl spot fish marinated & cooked in banana leaf — unique to backwaters.', price:'₹280–500' },
+      { emoji:'☕', name:'Kerala Filter Kaapi', desc:'Strong decoction coffee with frothy milk — the perfect morning ritual.', price:'₹30–70' },
+    ],
+    Mumbai: [
+      { emoji:'🌮', name:'Vada Pav', desc:'Spiced potato fritter in a soft bun with dry garlic chutney — Mumbai\'s burger.', price:'₹15–40' },
+      { emoji:'🧆', name:'Pav Bhaji', desc:'Mashed spiced vegetable curry served with buttered bread rolls & onions.', price:'₹80–180' },
+      { emoji:'🍱', name:'Dabba Daal', desc:'Slow-cooked black lentils with butter — the Mumbai tiffin staple.', price:'₹60–120' },
+      { emoji:'🥗', name:'Bhel Puri', desc:'Puffed rice tossed with chutneys, onion, tomato & sev — street food icon.', price:'₹20–50' },
+      { emoji:'🍜', name:'Misal Pav', desc:'Sprouted lentil curry topped with farsan, onion and tangy gravy with pav.', price:'₹60–120' },
+      { emoji:'🦀', name:'Bombay Duck Fry', desc:'Local fish (Bombil) coated in semolina and deep-fried to golden crunch.', price:'₹150–280' },
+    ],
+  };
+
+  function showFood(dest) {
+    document.querySelectorAll('#destChips .chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('foodTitle').textContent = event.target.textContent + ' — Must-Try Dishes';
+    const items = FOOD_DATA[dest] || [];
+    document.getElementById('foodGrid').innerHTML = items.map(f => `
+      <div class="glass-card">
+        <div style="font-size:2.5rem;margin-bottom:0.6rem">${f.emoji}</div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:0.3rem">${f.name}</div>
+        <div style="font-size:0.84rem;color:var(--text-light);margin-bottom:0.7rem;line-height:1.5">${f.desc}</div>
+        <div style="font-weight:600;color:var(--primary)">${f.price}</div>
+      </div>`).join('');
+  }
+  window.addEventListener('load', () => showFood('Goa'));
+</script>
+</body>
+</html>

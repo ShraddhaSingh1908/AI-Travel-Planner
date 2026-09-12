@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Packing List — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">🧳 Smart Packing List</div>
+      <div class="card-sub">AI-curated packing checklists tailored to your trip type — never forget anything important again.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🗺️ Trip Type</h3>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap" id="tripTypeRadios">
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-weight:500">
+          <input type="radio" name="tripType" value="Beach" checked onchange="renderList(this.value)" style="accent-color:var(--primary);width:16px;height:16px"/> 🏖️ Beach
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-weight:500">
+          <input type="radio" name="tripType" value="Mountain" onchange="renderList(this.value)" style="accent-color:var(--primary);width:16px;height:16px"/> 🏔️ Mountain
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-weight:500">
+          <input type="radio" name="tripType" value="City" onchange="renderList(this.value)" style="accent-color:var(--primary);width:16px;height:16px"/> 🏙️ City
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-weight:500">
+          <input type="radio" name="tripType" value="Winter" onchange="renderList(this.value)" style="accent-color:var(--primary);width:16px;height:16px"/> ❄️ Winter
+        </label>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem" id="packingCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;margin-bottom:1rem">
+        <h3 id="packingTitle">🏖️ Beach Packing List</h3>
+        <button class="btn btn-outline" onclick="downloadList()">📥 Download List</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0" id="checklistGrid" class="checklist"></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  const PACKING = {
+    Beach: [
+      'Sunscreen SPF 50+','Sunglasses','Beach towel','Swimwear (2 sets)',
+      'Flip flops / sandals','Light t-shirts & shorts','Sun hat / cap',
+      'Waterproof phone case','After-sun lotion','Insect repellent',
+      'Travel first-aid kit','Water bottle','Snorkelling gear','Light rain jacket',
+      'Camera / GoPro','ID & travel documents','Cash & cards','Power bank',
+    ],
+    Mountain: [
+      'Thermal innerwear (2 sets)','Fleece jacket','Waterproof windcheater',
+      'Trekking boots','Woollen socks (3 pairs)','Trekking poles',
+      'Headlamp & extra batteries','High-altitude medicine (Diamox)',
+      'Sunscreen & lip balm','Warm gloves','Muffler / neck gaiter',
+      'Energy bars & dry fruits','Hydration pack / water bottle',
+      'Navigation app offline maps','First-aid with bandages','Sleeping bag liner',
+      'Passport copy','Emergency whistle',
+    ],
+    City: [
+      'Comfortable walking shoes','Smart casuals (3 sets)','Formal outfit (1 set)',
+      'Day backpack','Portable charger / power bank','Noise-cancelling earphones',
+      'Travel adapter','City guide / offline maps','Metro/bus card',
+      'Umbrella / compact raincoat','Sunglasses','Camera',
+      'Hand sanitiser & masks','Wet wipes','Medicines (personal)',
+      'Snacks for transit','ID & hotel booking printouts','Laundry bag',
+    ],
+    Winter: [
+      'Heavy down jacket','Thermal base layer (top & bottom)','Woollen sweaters (2)',
+      'Waterproof snow boots','Woollen socks (4 pairs)','Insulated gloves',
+      'Woollen cap / beanie','Muffler / scarf','Lip balm & moisturiser',
+      'Hand warmers (disposable)','Snow goggles','Thermal flask',
+      'Emergency blanket','First-aid kit','Cold/flu medicines',
+      'Portable heater pad','ID & insurance docs','Camera with spare batteries',
+    ],
+  };
+
+  const ICONS = {
+    Beach:'🏖️', Mountain:'🏔️', City:'🏙️', Winter:'❄️'
+  };
+
+  function renderList(type) {
+    const items = PACKING[type] || [];
+    document.getElementById('packingTitle').textContent = `${ICONS[type]} ${type} Packing List`;
+    document.getElementById('checklistGrid').innerHTML = items.map((item, i) => `
+      <label class="check-item">
+        <input type="checkbox" style="accent-color:var(--primary);flex-shrink:0"/>
+        <span>${item}</span>
+      </label>`).join('');
+  }
+
+  function downloadList() {
+    const type = document.querySelector('input[name="tripType"]:checked').value;
+    const items = PACKING[type] || [];
+    const text = `# ${type} Packing List — TravelAI\n\n` + items.map(i => `- [ ] ${i}`).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/markdown' }));
+    a.download = `${type}_Packing_List.md`;
+    a.click();
+  }
+
+  window.addEventListener('load', () => renderList('Beach'));
+</script>
+</body>
+</html>

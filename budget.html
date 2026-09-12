@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Budget Planner — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">💰 Budget Planner</div>
+      <div class="card-sub">Enter your trip details to get a smart category-wise budget breakdown powered by IBM Granite.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">📋 Trip Details</h3>
+      <div class="form-grid-3" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">💵 Total Budget (INR)</label>
+          <input type="number" class="form-input" id="totalBudget" value="30000" step="1000" min="5000" oninput="recalcBudget()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📅 Duration (Days)</label>
+          <input type="number" class="form-input" id="duration" value="5" min="1" max="30" oninput="recalcBudget()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">👥 Travellers</label>
+          <input type="number" class="form-input" id="travellers" value="2" min="1" max="20" oninput="recalcBudget()"/>
+        </div>
+      </div>
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label">🏨 Hotel Budget / Night (INR)</label>
+          <input type="number" class="form-input" id="hotelPerNight" value="4500" step="500" min="500" oninput="recalcBudget()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">✈️ Transport Budget (INR)</label>
+          <input type="number" class="form-input" id="transportBudget" value="6000" step="500" min="0" oninput="recalcBudget()"/>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end">
+          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="recalcBudget()">📊 Calculate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem" id="budgetBreakdown">
+      <h3 style="margin-bottom:0.3rem">📊 Budget Breakdown</h3>
+      <p style="color:var(--text-light);font-size:0.88rem;margin-bottom:1.4rem">Category allocation for 2 travellers · 5 days · ₹30,000 total</p>
+
+      <div id="budgetBars"></div>
+
+      <div class="table-wrap" style="margin-top:1.5rem">
+        <table class="data-table" id="budgetTable">
+          <thead><tr><th>Category</th><th>Amount (INR)</th><th>Per Person</th><th>Per Day</th><th>% of Total</th></tr></thead>
+          <tbody id="budgetTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="metrics-row" style="margin-top:1.2rem" id="budgetMetrics"></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  function recalcBudget() {
+    const total = parseFloat(document.getElementById('totalBudget').value) || 30000;
+    const days  = parseInt(document.getElementById('duration').value) || 5;
+    const pax   = parseInt(document.getElementById('travellers').value) || 2;
+    const hotel = (parseFloat(document.getElementById('hotelPerNight').value) || 4500) * days;
+    const trans = parseFloat(document.getElementById('transportBudget').value) || 6000;
+
+    const remaining = total - hotel - trans;
+    const food   = Math.round(remaining * 0.38);
+    const local  = Math.round(remaining * 0.20);
+    const sight  = Math.round(remaining * 0.25);
+    const misc   = Math.round(remaining * 0.17);
+
+    const cats = [
+      { name:'🏨 Accommodation', amount: hotel,  pct: Math.round(hotel/total*100) },
+      { name:'✈️ Transport',     amount: trans,  pct: Math.round(trans/total*100) },
+      { name:'🍽️ Food & Dining', amount: food,   pct: Math.round(food/total*100) },
+      { name:'🚗 Local Travel',  amount: local,  pct: Math.round(local/total*100) },
+      { name:'🎡 Sightseeing',   amount: sight,  pct: Math.round(sight/total*100) },
+      { name:'🛍️ Misc & Shopping',amount: misc,  pct: Math.round(misc/total*100) },
+    ];
+
+    const colors = ['#3b82d4','#7c5cd8','#10b981','#f59e0b','#ef4444','#6b7280'];
+
+    // Bars
+    const barsHtml = cats.map((c,i) => `
+      <div class="budget-bar-item">
+        <div class="budget-bar-header">
+          <span class="budget-bar-label">${c.name}</span>
+          <span class="budget-bar-values">₹${c.amount.toLocaleString()} &nbsp;·&nbsp; <b>${c.pct}%</b></span>
+        </div>
+        <div class="budget-bar-track">
+          <div class="budget-bar-fill" style="width:${c.pct}%;background:${colors[i]}"></div>
+        </div>
+      </div>`).join('');
+    document.getElementById('budgetBars').innerHTML = barsHtml;
+
+    // Table
+    const rows = cats.map(c => `<tr>
+      <td>${c.name}</td>
+      <td>₹${c.amount.toLocaleString()}</td>
+      <td>₹${Math.round(c.amount/pax).toLocaleString()}</td>
+      <td>₹${Math.round(c.amount/days).toLocaleString()}</td>
+      <td>${c.pct}%</td>
+    </tr>`).join('');
+    document.getElementById('budgetTableBody').innerHTML = rows;
+
+    // Summary
+    const spent = cats.reduce((s,c) => s+c.amount, 0);
+    document.getElementById('budgetMetrics').innerHTML = `
+      <div class="metric-card"><div class="metric-value">₹${total.toLocaleString()}</div><div class="metric-label">Total Budget</div></div>
+      <div class="metric-card"><div class="metric-value">₹${spent.toLocaleString()}</div><div class="metric-label">Allocated</div></div>
+      <div class="metric-card"><div class="metric-value">₹${(total-spent).toLocaleString()}</div><div class="metric-label">Buffer / Savings</div></div>
+      <div class="metric-card"><div class="metric-value">₹${Math.round(total/pax).toLocaleString()}</div><div class="metric-label">Per Person</div></div>
+    `;
+    document.querySelector('#budgetBreakdown p').textContent =
+      `Category allocation for ${pax} traveller${pax>1?'s':''} · ${days} days · ₹${total.toLocaleString()} total`;
+  }
+  window.addEventListener('load', recalcBudget);
+</script>
+</body>
+</html>

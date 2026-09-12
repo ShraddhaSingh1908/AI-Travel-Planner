@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Assistant — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html" class="active">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/>
+    </div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select" id="cloudRegion">
+        <option>us-south</option><option>eu-de</option><option>eu-gb</option>
+      </select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Tokens <span class="slider-value" id="maxTokens_val">1500</span></label>
+      <input type="range" class="form-slider" id="maxTokens" min="300" max="2500" step="100" value="1500"/>
+    </div>
+    <hr class="sidebar-divider"/>
+
+    <div class="sidebar-section">💡 Quick Prompts</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem">
+      <button class="chip" onclick="insertPrompt(this)" style="border-radius:8px;text-align:left;width:100%">Plan a 5-day Goa trip for ₹25,000</button>
+      <button class="chip" onclick="insertPrompt(this)" style="border-radius:8px;text-align:left;width:100%">Best time to visit Manali?</button>
+      <button class="chip" onclick="insertPrompt(this)" style="border-radius:8px;text-align:left;width:100%">Suggest a solo budget itinerary for Kerala</button>
+      <button class="chip" onclick="insertPrompt(this)" style="border-radius:8px;text-align:left;width:100%">What to pack for a winter trip to Leh?</button>
+    </div>
+
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">
+      🤖 Model: <b>ibm/granite-4-h-small</b><br/>
+      🌐 Powered by IBM watsonx.ai<br/>
+      💬 Conversational AI concierge<br/>
+      🔒 Credentials stored locally
+    </div>
+  </aside>
+
+  <!-- Main chat area -->
+  <main class="page-content">
+    <div class="glass-card" style="margin-bottom:1.2rem">
+      <div class="card-header">💬 AI Travel Concierge</div>
+      <div class="card-sub">Ask anything about travel — itineraries, budgets, packing, destinations, visa & more. Powered by IBM Granite 4.</div>
+    </div>
+
+    <div class="chat-area" style="height:calc(100vh - 230px)">
+      <div class="chat-messages-full" id="chatMessages" style="flex:1">
+        <div class="chat-msg-full">
+          <div class="chat-avatar-sm">🤖</div>
+          <div class="chat-bubble ai">
+            <strong>👋 Hello! I'm your TravelAI Concierge, powered by IBM Granite 4.</strong><br/><br/>
+            I can help you:<br/>
+            ✈️ Plan complete trip itineraries<br/>
+            💰 Optimise your travel budget<br/>
+            🌤️ Get destination weather tips<br/>
+            🧳 Build smart packing lists<br/>
+            🗺️ Discover hidden gems<br/><br/>
+            What would you like to explore today? 🌍
+          </div>
+        </div>
+      </div>
+      <form id="chatForm" class="chat-input-bar">
+        <input type="text" id="chatInput" placeholder="e.g. 'Plan a 5-day Goa trip for ₹25,000 for 2 people'…" autocomplete="off"/>
+        <button type="submit" class="btn btn-primary">Send →</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="assets/main.js"></script>
+<script>
+function insertPrompt(btn) {
+  const input = document.getElementById('chatInput');
+  if (input) { input.value = btn.textContent.trim(); input.focus(); }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nearby Places — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">📍 Nearby Places</div>
+      <div class="card-sub">Discover restaurants, hotels, ATMs, hospitals, petrol stations, and temples near your location.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🔍 Explore Nearby</h3>
+      <div style="display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;margin-bottom:1.2rem">
+        <input type="text" class="form-input" id="nearbyLocation" value="Calangute, Goa" placeholder="Enter location…" style="flex:1;min-width:200px"/>
+        <button class="btn btn-primary" onclick="searchNearby()">📍 Find Nearby</button>
+      </div>
+      <p style="font-weight:600;margin-bottom:0.6rem">Filter by Category:</p>
+      <div class="chips-row" id="categoryChips">
+        <span class="chip active" onclick="filterCategory('Food')">🍽️ Food</span>
+        <span class="chip" onclick="filterCategory('Hotel')">🏨 Hotel</span>
+        <span class="chip" onclick="filterCategory('ATM')">🏧 ATM</span>
+        <span class="chip" onclick="filterCategory('Hospital')">🏥 Hospital</span>
+        <span class="chip" onclick="filterCategory('Petrol')">⛽ Petrol</span>
+        <span class="chip" onclick="filterCategory('Temple')">🛕 Temple</span>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <h3 style="margin-bottom:1rem" id="nearbyTitle">🍽️ Food Places near Calangute, Goa</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.1rem" id="nearbyGrid"></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  const NEARBY = {
+    Food: [
+      { name:'Britto\'s Restaurant', addr:'Baga Beach Rd', dist:'0.3 km', rating:'4.5', open:true },
+      { name:'Infantaria Café', addr:'Calangute–Baga Rd', dist:'0.6 km', rating:'4.2', open:true },
+      { name:'Fisherman\'s Wharf', addr:'Cavelossim', dist:'1.2 km', rating:'4.4', open:true },
+      { name:'Kokni Kanteen', addr:'Panaji', dist:'2.1 km', rating:'4.6', open:false },
+      { name:'Gunpowder', addr:'Assagao', dist:'3.4 km', rating:'4.7', open:true },
+      { name:'Black Sheep Bistro', addr:'Panaji', dist:'4.0 km', rating:'4.5', open:false },
+    ],
+    Hotel: [
+      { name:'The Leela Goa', addr:'Cavelossim Beach', dist:'1.8 km', rating:'4.8', open:true },
+      { name:'Taj Exotica', addr:'Benaulim', dist:'2.2 km', rating:'4.7', open:true },
+      { name:'Alila Diwa Goa', addr:'Majorda', dist:'3.1 km', rating:'4.6', open:true },
+      { name:'Acacia Palms Resort', addr:'Calangute', dist:'0.4 km', rating:'3.9', open:true },
+      { name:'Pousada Tauma', addr:'Porvorim', dist:'5.0 km', rating:'4.3', open:true },
+      { name:'Club Mahindra Varca', addr:'Varca', dist:'6.2 km', rating:'4.1', open:true },
+    ],
+    ATM: [
+      { name:'SBI ATM', addr:'Calangute Market', dist:'0.2 km', rating:'3.8', open:true },
+      { name:'HDFC ATM', addr:'Baga Road', dist:'0.7 km', rating:'4.0', open:true },
+      { name:'ICICI ATM', addr:'Candolim', dist:'1.3 km', rating:'3.9', open:true },
+      { name:'Axis Bank ATM', addr:'Panaji', dist:'2.5 km', rating:'3.7', open:false },
+      { name:'Canara Bank ATM', addr:'Mapusa', dist:'4.1 km', rating:'3.5', open:true },
+      { name:'Kotak ATM', addr:'Porvorim', dist:'5.3 km', rating:'3.6', open:true },
+    ],
+    Hospital: [
+      { name:'Goa Medical College', addr:'Bambolim', dist:'5.2 km', rating:'4.1', open:true },
+      { name:'Apollo Clinic', addr:'Panaji', dist:'3.8 km', rating:'4.3', open:true },
+      { name:'Victor Ferreira Hospital', addr:'Mapusa', dist:'4.6 km', rating:'3.9', open:true },
+      { name:'Manipal Hospital Goa', addr:'Dona Paula', dist:'6.0 km', rating:'4.4', open:true },
+      { name:'Primary Health Centre', addr:'Calangute', dist:'0.9 km', rating:'3.6', open:false },
+      { name:'North Goa District Hospital', addr:'Mapusa', dist:'4.9 km', rating:'3.8', open:true },
+    ],
+    Petrol: [
+      { name:'HP Petrol Pump', addr:'Calangute NH', dist:'0.5 km', rating:'4.0', open:true },
+      { name:'Indian Oil', addr:'Baga–Arpora Rd', dist:'1.1 km', rating:'3.9', open:true },
+      { name:'BPCL Station', addr:'Mapusa Road', dist:'2.3 km', rating:'4.1', open:true },
+      { name:'Reliance Petrol', addr:'Porvorim', dist:'3.7 km', rating:'3.8', open:true },
+      { name:'Essar Pump', addr:'Panaji Bypass', dist:'5.1 km', rating:'3.7', open:false },
+      { name:'Shell Outlet', addr:'NH 66', dist:'6.8 km', rating:'4.2', open:true },
+    ],
+    Temple: [
+      { name:'Shri Mahalakshmi Temple', addr:'Panaji', dist:'3.4 km', rating:'4.7', open:true },
+      { name:'Shri Shantadurga Temple', addr:'Kavlem, Ponda', dist:'18 km', rating:'4.9', open:true },
+      { name:'Mangueshi Temple', addr:'Priol, Ponda', dist:'20 km', rating:'4.8', open:true },
+      { name:'Safa Shahouri Mosque', addr:'Ponda', dist:'21 km', rating:'4.3', open:false },
+      { name:'Church of Our Lady', addr:'Old Goa', dist:'14 km', rating:'4.9', open:true },
+      { name:'Basilica of Bom Jesus', addr:'Old Goa (UNESCO)', dist:'14 km', rating:'4.9', open:true },
+    ],
+  };
+
+  const CAT_ICONS = { Food:'🍽️', Hotel:'🏨', ATM:'🏧', Hospital:'🏥', Petrol:'⛽', Temple:'🛕' };
+
+  function filterCategory(cat) {
+    document.querySelectorAll('#categoryChips .chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    const loc = document.getElementById('nearbyLocation').value || 'Your Location';
+    document.getElementById('nearbyTitle').textContent = `${CAT_ICONS[cat]} ${cat} near ${loc}`;
+    const items = NEARBY[cat] || [];
+    document.getElementById('nearbyGrid').innerHTML = items.map(p => `
+      <div class="glass-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.4rem">
+          <div style="font-weight:700;font-size:1rem">${p.name}</div>
+          <span style="font-size:0.75rem;padding:0.2rem 0.5rem;border-radius:20px;font-weight:600;
+            background:${p.open ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.12)'};
+            color:${p.open ? 'var(--success)' : 'var(--error)'}">
+            ${p.open ? '● Open' : '● Closed'}
+          </span>
+        </div>
+        <div style="color:var(--text-light);font-size:0.84rem;margin-bottom:0.6rem">📍 ${p.addr}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:#f59e0b;font-weight:600">★ ${p.rating}</span>
+          <span style="font-size:0.82rem;color:var(--text-light)">${p.dist} away</span>
+        </div>
+      </div>`).join('');
+  }
+
+  function searchNearby() {
+    const active = document.querySelector('#categoryChips .chip.active');
+    if (active) { const evt = { target: active }; filterCategory(active.textContent.trim().replace(/[^\w ]/g,'').trim()); }
+  }
+
+  window.addEventListener('load', () => filterCategory('Food'));
+</script>
+</body>
+</html>

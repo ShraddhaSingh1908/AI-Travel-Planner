@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Transport — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">🚆 Transport Comparison</div>
+      <div class="card-sub">Compare flights, trains, and buses between Indian cities — find the best option for your trip.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🔍 Search Transport</h3>
+      <div class="form-grid-3" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">🛫 From</label>
+          <input type="text" class="form-input" id="fromCity" value="Delhi" placeholder="Origin city…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">🛬 To</label>
+          <input type="text" class="form-input" id="toCity" value="Goa" placeholder="Destination city…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📅 Travel Date</label>
+          <input type="date" class="form-input" id="travelDate"/>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="searchTransport()">🔍 Search Transport Options</button>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">📊 Transport Results: Delhi → Goa</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Mode</th><th>Operator</th><th>Departure</th><th>Duration</th><th>Price (INR)</th><th>Class/Type</th><th>Availability</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>✈️ Flight</td><td>IndiGo</td><td>06:15</td><td>2h 20m</td><td>₹4,299</td><td>Economy</td><td><span style="color:var(--success)">●</span> Available</td></tr>
+            <tr><td>✈️ Flight</td><td>Air India</td><td>09:40</td><td>2h 35m</td><td>₹5,850</td><td>Economy</td><td><span style="color:var(--success)">●</span> Available</td></tr>
+            <tr><td>✈️ Flight</td><td>SpiceJet</td><td>14:55</td><td>2h 25m</td><td>₹3,799</td><td>Economy</td><td><span style="color:var(--warning)">●</span> 3 left</td></tr>
+            <tr><td>🚂 Train</td><td>Goa Express</td><td>11:05</td><td>26h 45m</td><td>₹1,245</td><td>Sleeper</td><td><span style="color:var(--success)">●</span> Available</td></tr>
+            <tr><td>🚂 Train</td><td>Rajdhani Exp.</td><td>16:00</td><td>23h 30m</td><td>₹2,480</td><td>AC 2-Tier</td><td><span style="color:var(--success)">●</span> Available</td></tr>
+            <tr><td>🚌 Bus</td><td>RedBus Volvo</td><td>18:00</td><td>28h 00m</td><td>₹1,899</td><td>AC Sleeper</td><td><span style="color:var(--warning)">●</span> 8 left</td></tr>
+            <tr><td>🚌 Bus</td><td>SRS Travels</td><td>20:30</td><td>30h 00m</td><td>₹1,499</td><td>Semi-Sleeper</td><td><span style="color:var(--success)">●</span> Available</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="metrics-row" style="margin-top:1.2rem">
+      <div class="metric-card"><div class="metric-value">₹3,799</div><div class="metric-label">Cheapest Flight</div></div>
+      <div class="metric-card"><div class="metric-value">₹1,245</div><div class="metric-label">Cheapest Train</div></div>
+      <div class="metric-card"><div class="metric-value">₹1,499</div><div class="metric-label">Cheapest Bus</div></div>
+      <div class="metric-card"><div class="metric-value">2h 20m</div><div class="metric-label">Fastest Option</div></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    const d = new Date(); d.setDate(d.getDate() + 7);
+    const el = document.getElementById('travelDate');
+    if (el) el.value = d.toISOString().split('T')[0];
+  });
+  function searchTransport() {
+    const from = document.getElementById('fromCity').value || 'Delhi';
+    const to = document.getElementById('toCity').value || 'Goa';
+    document.querySelector('.glass-card:nth-child(3) h3').textContent = `📊 Transport Results: ${from} → ${to}`;
+  }
+</script>
+</body>
+</html>

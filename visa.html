@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Visa &amp; Docs — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">📄 Visa &amp; Documents</div>
+      <div class="card-sub">Visa requirements, document checklists, processing times, and fees for Indian passport holders.</div>
+    </div>
+
+    <div class="info-box" style="margin-top:1.2rem">
+      ℹ️ Information is for reference only. Always verify with the official embassy or consulate before travel. Requirements may change.
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <div class="form-group" style="max-width:360px">
+        <label class="form-label" style="font-size:1rem;font-weight:600">🌍 Select Destination Country</label>
+        <select class="form-select" id="countrySelect" onchange="showVisa(this.value)">
+          <option value="UAE">🇦🇪 UAE (Dubai)</option>
+          <option value="Thailand">🇹🇭 Thailand</option>
+          <option value="USA">🇺🇸 USA</option>
+          <option value="UK">🇬🇧 United Kingdom</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem" id="visaCard">
+      <div id="visaContent"></div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  const VISA = {
+    UAE: {
+      flag:'🇦🇪', country:'UAE (Dubai)', type:'Visa on Arrival / eVisa',
+      time:'1–3 business days', fee:'AED 100 (~₹2,300)', duration:'30 days (extendable to 60)',
+      docs:['Valid Indian Passport (min 6 months validity)','Return flight tickets','Hotel booking confirmation','Travel Insurance','Bank statement (last 3 months)','Passport-size photographs (2)','Completed online application form'],
+      notes:'Indian passport holders can get visa on arrival at Dubai Airport. eVisa recommended for smoother processing.'
+    },
+    Thailand: {
+      flag:'🇹🇭', country:'Thailand', type:'Visa-Free / eVisa',
+      time:'Instant (visa-free) / 3–5 days (eVisa)', fee:'Free (visa-free) / THB 2,000 (~₹4,600)', duration:'30 days visa-free (as of 2024)',
+      docs:['Valid Indian Passport (min 6 months)','Return flight tickets','Hotel booking','Proof of sufficient funds (₹50,000+ equivalent)','Passport-size photos (2)'],
+      notes:'Thailand announced visa-free entry for Indians in 2024. Confirm current status before travel as policies may change.'
+    },
+    USA: {
+      flag:'🇺🇸', country:'USA', type:'B1/B2 Tourist Visa',
+      time:'4–12 weeks (varies by consulate)', fee:'USD 185 (~₹15,400)', duration:'Up to 10 years (multiple entry, 180 days/visit)',
+      docs:['Valid Indian Passport','DS-160 Online Application','Visa appointment confirmation','SEVIS fee receipt (if applicable)','Bank statements (last 6 months)','ITR (Income Tax Returns - 3 years)','Property documents / employer letter','Passport-size photos (2, per US spec)','Travel itinerary'],
+      notes:'US visa interviews are mandatory. Appointment wait times can be 2–6 months. Apply well in advance of travel date.'
+    },
+    UK: {
+      flag:'🇬🇧', country:'United Kingdom', type:'Standard Visitor Visa',
+      time:'3 weeks (standard) / 5 days (priority)', fee:'GBP 115 (~₹12,200)', duration:'Up to 6 months per visit',
+      docs:['Valid Indian Passport (min 6 months)','UK Visa Application Form','Biometric enrolment','Bank statements (last 6 months)','Proof of employment / business','Return flight tickets','Accommodation proof','Travel insurance','Sponsorship letter (if applicable)','ITR last 3 years'],
+      notes:'Apply at least 3 months in advance. Priority service available for faster processing at additional cost.'
+    },
+  };
+
+  function showVisa(country) {
+    const v = VISA[country];
+    if (!v) return;
+    const docsHtml = v.docs.map(d => `<label class="check-item"><input type="checkbox" style="accent-color:var(--primary);flex-shrink:0"/><span>${d}</span></label>`).join('');
+    document.getElementById('visaContent').innerHTML = `
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem">
+        <span style="font-size:2.5rem">${v.flag}</span>
+        <div>
+          <div style="font-weight:800;font-size:1.2rem">${v.country}</div>
+          <div style="color:var(--text-light);font-size:0.9rem">For Indian Passport Holders</div>
+        </div>
+      </div>
+      <div class="metrics-row" style="margin-bottom:1.4rem">
+        <div class="metric-card"><div class="metric-value" style="font-size:0.95rem">${v.type}</div><div class="metric-label">Visa Type</div></div>
+        <div class="metric-card"><div class="metric-value" style="font-size:0.95rem">${v.time}</div><div class="metric-label">Processing Time</div></div>
+        <div class="metric-card"><div class="metric-value" style="font-size:0.95rem">${v.fee}</div><div class="metric-label">Fee</div></div>
+        <div class="metric-card"><div class="metric-value" style="font-size:0.95rem">${v.duration}</div><div class="metric-label">Duration</div></div>
+      </div>
+      <h4 style="margin-bottom:0.8rem">📋 Required Documents</h4>
+      <div class="checklist" style="margin-bottom:1.2rem">${docsHtml}</div>
+      <div class="info-box">💡 <b>Note:</b> ${v.notes}</div>
+    `;
+  }
+  window.addEventListener('load', () => showVisa('UAE'));
+</script>
+</body>
+</html>

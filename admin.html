@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">⚙️ Admin Panel</div>
+      <div class="card-sub">Platform overview — user activity, API usage, trip generation statistics, and system health.</div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="metrics-row" style="margin-top:1.2rem">
+      <div class="metric-card" style="border-left:4px solid #3b82d4">
+        <div style="font-size:1.8rem;margin-bottom:0.3rem">👥</div>
+        <div class="metric-value">2,400</div>
+        <div class="metric-label">Total Users</div>
+        <div style="font-size:0.75rem;color:var(--success);margin-top:0.2rem">▲ +12% this month</div>
+      </div>
+      <div class="metric-card" style="border-left:4px solid #10b981">
+        <div style="font-size:1.8rem;margin-bottom:0.3rem">✈️</div>
+        <div class="metric-value">18,500</div>
+        <div class="metric-label">Trips Generated</div>
+        <div style="font-size:0.75rem;color:var(--success);margin-top:0.2rem">▲ +8% this week</div>
+      </div>
+      <div class="metric-card" style="border-left:4px solid #f59e0b">
+        <div style="font-size:1.8rem;margin-bottom:0.3rem">🟢</div>
+        <div class="metric-value">124</div>
+        <div class="metric-label">Active Sessions</div>
+        <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.2rem">Live right now</div>
+      </div>
+      <div class="metric-card" style="border-left:4px solid #7c5cd8">
+        <div style="font-size:1.8rem;margin-bottom:0.3rem">🤖</div>
+        <div class="metric-value">4,210</div>
+        <div class="metric-label">API Calls Today</div>
+        <div style="font-size:0.75rem;color:var(--success);margin-top:0.2rem">▲ +5% vs yesterday</div>
+      </div>
+    </div>
+
+    <!-- System Health -->
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🖥️ System Health</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;text-align:center">
+          <div style="color:var(--success);font-size:1.5rem">✅</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:0.3rem">watsonx.ai API</div>
+          <div style="font-size:0.78rem;color:var(--success)">Operational</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;text-align:center">
+          <div style="color:var(--success);font-size:1.5rem">✅</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:0.3rem">Streamlit App</div>
+          <div style="font-size:0.78rem;color:var(--success)">Running</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;text-align:center">
+          <div style="color:#f59e0b;font-size:1.5rem">⚠️</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:0.3rem">OpenWeather</div>
+          <div style="font-size:0.78rem;color:#f59e0b">Key not set</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.9rem;text-align:center">
+          <div style="color:var(--success);font-size:1.5rem">✅</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-top:0.3rem">IBM Granite 4</div>
+          <div style="font-size:0.78rem;color:var(--success)">Model Ready</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">📋 Recent Activity</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>User</th><th>Action</th><th>Destination</th><th>Time</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>👤 rahul.sharma@email.com</td>
+              <td>🗺️ Generated Trip Plan</td>
+              <td>Manali, HP</td>
+              <td>2 min ago</td>
+              <td><span style="color:var(--success);font-weight:600">✅ Success</span></td>
+            </tr>
+            <tr>
+              <td>👤 priya.mehta@gmail.com</td>
+              <td>🏨 Searched Hotels</td>
+              <td>Goa</td>
+              <td>7 min ago</td>
+              <td><span style="color:var(--success);font-weight:600">✅ Success</span></td>
+            </tr>
+            <tr>
+              <td>👤 arjun.verma@yahoo.com</td>
+              <td>💬 AI Concierge Chat</td>
+              <td>Jaipur, Rajasthan</td>
+              <td>14 min ago</td>
+              <td><span style="color:var(--success);font-weight:600">✅ Success</span></td>
+            </tr>
+            <tr>
+              <td>👤 sneha.kapoor@outlook.com</td>
+              <td>🗺️ Generated Trip Plan</td>
+              <td>Kerala Backwaters</td>
+              <td>22 min ago</td>
+              <td><span style="color:var(--warning);font-weight:600">⚠️ Slow</span></td>
+            </tr>
+            <tr>
+              <td>👤 kiran.nair@email.com</td>
+              <td>✈️ Checked Flights</td>
+              <td>Leh Ladakh</td>
+              <td>31 min ago</td>
+              <td><span style="color:var(--success);font-weight:600">✅ Success</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Usage Chart Placeholder -->
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:0.5rem">📈 API Usage (Last 7 Days)</h3>
+      <div style="display:flex;gap:0.5rem;align-items:flex-end;height:100px;padding:0.5rem 0">
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:60%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">3,840</div>
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:75%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">4,100</div>
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:55%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">3,620</div>
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:85%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">4,780</div>
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:70%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">3,960</div>
+        <div style="flex:1;background:#3b82d4;border-radius:6px 6px 0 0;height:90%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">5,020</div>
+        <div style="flex:1;background:#7c5cd8;border-radius:6px 6px 0 0;height:100%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.3rem;color:#fff;font-size:0.7rem;font-weight:600">4,210</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-light);padding:0 0.2rem">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span style="color:#7c5cd8;font-weight:600">Today</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+</body>
+</html>

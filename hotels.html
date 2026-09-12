@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hotels &amp; Stay — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">🏨 Hotels &amp; Stay</div>
+      <div class="card-sub">Find the perfect accommodation — from budget stays to luxury resorts — across India's top destinations.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1rem">🔍 Search Hotels</h3>
+      <div class="form-grid-3" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">📍 Destination</label>
+          <input type="text" class="form-input" id="hotelDest" value="Goa" placeholder="City or area…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📅 Check-in</label>
+          <input type="date" class="form-input" id="checkIn"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📅 Check-out</label>
+          <input type="date" class="form-input" id="checkOut"/>
+        </div>
+      </div>
+      <div class="form-grid-3" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">💰 Max Budget / Night (INR)</label>
+          <input type="number" class="form-input" id="budgetFilter" value="5000" step="500"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">⭐ Min Rating</label>
+          <select class="form-select" id="minRating">
+            <option>Any</option><option>3+</option><option>4+</option><option>4.5+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">🏷️ Type</label>
+          <select class="form-select">
+            <option>All Types</option><option>Hotel</option><option>Resort</option><option>Hostel</option><option>Villa</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary">🔍 Search Hotels</button>
+    </div>
+
+    <div style="margin-top:1.5rem">
+      <h3 style="margin-bottom:1rem">🏨 Available Hotels in Goa</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+
+        <!-- Hotel Card 1 -->
+        <div class="glass-card" style="padding:0;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#667eea,#764ba2);height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem">🏖️</div>
+          <div style="padding:1rem">
+            <div style="font-weight:700;font-size:1.05rem;margin-bottom:0.3rem">The Leela Goa</div>
+            <div style="color:var(--text-light);font-size:0.85rem;margin-bottom:0.5rem">📍 Cavelossim Beach, South Goa</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem">
+              <span style="color:#f59e0b;font-size:1rem">★★★★★</span>
+              <span style="font-weight:600;font-size:0.9rem">4.8</span>
+              <span style="color:var(--text-light);font-size:0.8rem">(1,240 reviews)</span>
+            </div>
+            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);margin-bottom:0.7rem">₹8,500 <span style="font-size:0.75rem;font-weight:500;color:var(--text-light)">/night</span></div>
+            <div class="chips-row" style="margin-bottom:0.8rem;flex-wrap:wrap;gap:0.3rem">
+              <span class="chip" style="font-size:0.72rem">🏊 Pool</span>
+              <span class="chip" style="font-size:0.72rem">🍽️ Restaurant</span>
+              <span class="chip" style="font-size:0.72rem">🏋️ Gym</span>
+              <span class="chip" style="font-size:0.72rem">📶 Free WiFi</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center">Book Now</button>
+          </div>
+        </div>
+
+        <!-- Hotel Card 2 -->
+        <div class="glass-card" style="padding:0;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#f093fb,#f5576c);height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem">🌴</div>
+          <div style="padding:1rem">
+            <div style="font-weight:700;font-size:1.05rem;margin-bottom:0.3rem">Taj Exotica Goa</div>
+            <div style="color:var(--text-light);font-size:0.85rem;margin-bottom:0.5rem">📍 Benaulim Beach, South Goa</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem">
+              <span style="color:#f59e0b;font-size:1rem">★★★★★</span>
+              <span style="font-weight:600;font-size:0.9rem">4.7</span>
+              <span style="color:var(--text-light);font-size:0.8rem">(980 reviews)</span>
+            </div>
+            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);margin-bottom:0.7rem">₹12,200 <span style="font-size:0.75rem;font-weight:500;color:var(--text-light)">/night</span></div>
+            <div class="chips-row" style="margin-bottom:0.8rem;flex-wrap:wrap;gap:0.3rem">
+              <span class="chip" style="font-size:0.72rem">🏊 Pool</span>
+              <span class="chip" style="font-size:0.72rem">🍹 Bar</span>
+              <span class="chip" style="font-size:0.72rem">💆 Spa</span>
+              <span class="chip" style="font-size:0.72rem">🅿️ Parking</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center">Book Now</button>
+          </div>
+        </div>
+
+        <!-- Hotel Card 3 -->
+        <div class="glass-card" style="padding:0;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#4facfe,#00f2fe);height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem">🌊</div>
+          <div style="padding:1rem">
+            <div style="font-weight:700;font-size:1.05rem;margin-bottom:0.3rem">OYO Flagship North Goa</div>
+            <div style="color:var(--text-light);font-size:0.85rem;margin-bottom:0.5rem">📍 Calangute, North Goa</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem">
+              <span style="color:#f59e0b;font-size:1rem">★★★☆☆</span>
+              <span style="font-weight:600;font-size:0.9rem">3.6</span>
+              <span style="color:var(--text-light);font-size:0.8rem">(420 reviews)</span>
+            </div>
+            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);margin-bottom:0.7rem">₹1,899 <span style="font-size:0.75rem;font-weight:500;color:var(--text-light)">/night</span></div>
+            <div class="chips-row" style="margin-bottom:0.8rem;flex-wrap:wrap;gap:0.3rem">
+              <span class="chip" style="font-size:0.72rem">📶 Free WiFi</span>
+              <span class="chip" style="font-size:0.72rem">❄️ AC</span>
+              <span class="chip" style="font-size:0.72rem">🍳 Breakfast</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center">Book Now</button>
+          </div>
+        </div>
+
+        <!-- Hotel Card 4 -->
+        <div class="glass-card" style="padding:0;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#43e97b,#38f9d7);height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem">🌿</div>
+          <div style="padding:1rem">
+            <div style="font-weight:700;font-size:1.05rem;margin-bottom:0.3rem">Jungle Beach Hostel</div>
+            <div style="color:var(--text-light);font-size:0.85rem;margin-bottom:0.5rem">📍 Vagator, North Goa</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.7rem">
+              <span style="color:#f59e0b;font-size:1rem">★★★★☆</span>
+              <span style="font-weight:600;font-size:0.9rem">4.2</span>
+              <span style="color:var(--text-light);font-size:0.8rem">(310 reviews)</span>
+            </div>
+            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);margin-bottom:0.7rem">₹749 <span style="font-size:0.75rem;font-weight:500;color:var(--text-light)">/night</span></div>
+            <div class="chips-row" style="margin-bottom:0.8rem;flex-wrap:wrap;gap:0.3rem">
+              <span class="chip" style="font-size:0.72rem">📶 Free WiFi</span>
+              <span class="chip" style="font-size:0.72rem">🎮 Common Area</span>
+              <span class="chip" style="font-size:0.72rem">🏄 Activities</span>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center">Book Now</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    const d1 = new Date(); d1.setDate(d1.getDate() + 7);
+    const d2 = new Date(); d2.setDate(d2.getDate() + 10);
+    const ci = document.getElementById('checkIn');
+    const co = document.getElementById('checkOut');
+    if (ci) ci.value = d1.toISOString().split('T')[0];
+    if (co) co.value = d2.toISOString().split('T')[0];
+  });
+</script>
+</body>
+</html>

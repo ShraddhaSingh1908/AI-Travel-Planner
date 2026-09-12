@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Trips Dashboard — TravelAI</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html" class="active">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top:82px;min-height:100vh;background:var(--bg-alt)">
+  <div class="container" style="padding-bottom:4rem">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:0.2rem">📊 My Trips Dashboard</h1>
+        <p class="text-muted">All your AI-planned trips in one place.</p>
+      </div>
+      <a href="planner.html" class="btn btn-primary">➕ Plan New Trip</a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="metrics-row" style="margin-bottom:2rem">
+      <div class="metric-card"><div class="metric-label">✈️ Total Trips</div><div class="metric-value">3</div></div>
+      <div class="metric-card"><div class="metric-label">📅 Days Travelled</div><div class="metric-value">18</div></div>
+      <div class="metric-card"><div class="metric-label">💰 Total Spent</div><div class="metric-value">₹72,400</div></div>
+      <div class="metric-card"><div class="metric-label">🌍 Countries</div><div class="metric-value">2</div></div>
+      <div class="metric-card"><div class="metric-label">⭐ Avg Rating</div><div class="metric-value">4.8</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-nav" data-tabs="dash" style="margin-bottom:1.5rem">
+      <button class="tab-btn active" data-panel="dash-upcoming" data-group="dash">📅 Upcoming</button>
+      <button class="tab-btn" data-panel="dash-past" data-group="dash">🗂️ Past Trips</button>
+      <button class="tab-btn" data-panel="dash-saved" data-group="dash">💾 Saved Plans</button>
+    </div>
+
+    <!-- Upcoming -->
+    <div class="tab-panel active" id="dash-upcoming" data-group="dash">
+      <div class="trips-grid">
+
+        <div class="trip-card">
+          <img class="trip-card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Leh Ladakh"/>
+          <div class="trip-card-body">
+            <div class="trip-card-title">🏔️ Leh Ladakh</div>
+            <div class="trip-card-meta">📅 Aug 15–22, 2026 · 7 Days</div>
+            <div class="trip-card-meta">👥 2 Travellers · ₹65,000 Budget</div>
+            <div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+              <span style="background:#dcfce7;color:#166534;padding:0.2rem 0.6rem;border-radius:8px;font-size:0.75rem;font-weight:700">✅ Booked</span>
+              <a href="planner.html" class="btn btn-outline btn-sm" style="font-size:0.78rem;padding:0.25rem 0.7rem">View Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="trip-card">
+          <img class="trip-card-img" src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" alt="Bali"/>
+          <div class="trip-card-body">
+            <div class="trip-card-title">🌺 Bali, Indonesia</div>
+            <div class="trip-card-meta">📅 Oct 5–14, 2026 · 10 Days</div>
+            <div class="trip-card-meta">👥 2 Travellers · ₹95,000 Budget</div>
+            <div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+              <span style="background:#fef9c3;color:#92400e;padding:0.2rem 0.6rem;border-radius:8px;font-size:0.75rem;font-weight:700">⏳ Pending</span>
+              <a href="planner.html" class="btn btn-outline btn-sm" style="font-size:0.78rem;padding:0.25rem 0.7rem">View Plan</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="trip-card" style="border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;min-height:200px;flex-direction:column;gap:0.8rem">
+          <div style="font-size:2rem">➕</div>
+          <div style="font-weight:700;color:var(--text-muted)">Plan a New Trip</div>
+          <a href="planner.html" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Past Trips -->
+    <div class="tab-panel" id="dash-past" data-group="dash">
+      <div class="trips-grid">
+
+        <div class="trip-card">
+          <img class="trip-card-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="Goa"/>
+          <div class="trip-card-body">
+            <div class="trip-card-title">🏖️ Goa</div>
+            <div class="trip-card-meta">📅 Dec 22–27, 2025 · 5 Days</div>
+            <div class="trip-card-meta">👥 4 Travellers · ₹28,000 Spent</div>
+            <div style="margin-top:0.5rem;color:#f59e0b">★★★★★</div>
+            <div style="margin-top:0.6rem">
+              <a href="planner.html" class="btn btn-outline btn-sm" style="font-size:0.78rem;padding:0.25rem 0.7rem">Re-plan</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="trip-card">
+          <img class="trip-card-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Manali"/>
+          <div class="trip-card-body">
+            <div class="trip-card-title">🏔️ Manali</div>
+            <div class="trip-card-meta">📅 Jan 10–14, 2026 · 4 Days</div>
+            <div class="trip-card-meta">👥 2 Travellers · ₹18,200 Spent</div>
+            <div style="margin-top:0.5rem;color:#f59e0b">★★★★☆</div>
+            <div style="margin-top:0.6rem">
+              <a href="planner.html" class="btn btn-outline btn-sm" style="font-size:0.78rem;padding:0.25rem 0.7rem">Re-plan</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Saved Plans -->
+    <div class="tab-panel" id="dash-saved" data-group="dash">
+      <div class="info-box">💾 Your saved AI-generated itineraries will appear here. <a href="planner.html">Generate a plan</a> and download it to save.</div>
+      <div style="text-align:center;padding:3rem 0;color:var(--text-muted)">
+        <div style="font-size:3rem;margin-bottom:1rem">📂</div>
+        <p>No saved plans yet.</p>
+        <a href="planner.html" class="btn btn-primary" style="margin-top:1rem">✨ Plan My First Trip</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+</body>
+</html>

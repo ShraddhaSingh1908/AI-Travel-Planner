@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Currency Converter — TravelAI · IBM Granite</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">✈</span> TravelAI</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="planner.html">Plan Trip</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="dashboard.html">My Trips</a></li>
+      <li><a href="chatbot.html">AI Assistant</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="auth.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="auth.html#register" class="btn btn-primary btn-sm">Register</a>
+      <button class="hamburger" id="hamburger">&#9776;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM"/></div>
+    <div class="sidebar-title">⚙️ Engine Control</div>
+    <div class="sidebar-caption">AICTE 2026 · Problem Statement 5</div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🔑 IBM Credentials</div>
+    <div class="form-group">
+      <label class="form-label">IBM IAM API Key</label>
+      <div style="display:flex;gap:0.4rem;align-items:center">
+        <input type="password" class="form-input" id="ibmApiKey" placeholder="Enter IBM IAM API key…"/>
+        <button class="pwd-toggle" data-target="ibmApiKey" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:0.45rem 0.55rem;cursor:pointer;font-size:0.9rem;flex-shrink:0">👁️</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">watsonx Project ID</label>
+      <input type="text" class="form-input" id="watsonxProjectId" placeholder="xxxxxxxx-xxxx-…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cloud Region</label>
+      <select class="form-select"><option>us-south</option><option>eu-de</option></select>
+    </div>
+    <div class="secrets-status">
+      <span id="statusApiKey">🔴</span> <b>IBM API Key</b><br/>
+      <span id="statusPid">🔴</span> <b>Project ID</b><br/>
+      <span id="statusWx">🟡</span> <b>OpenWeather</b> — optional
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-section">🎛️ Parameters</div>
+    <div class="form-group">
+      <label class="form-label">Creativity <span class="slider-value" id="temperature_val">0.7</span></label>
+      <input type="range" class="form-slider" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7"/>
+      <div class="slider-labels"><span>Focused</span><span>Creative</span></div>
+    </div>
+    <hr class="sidebar-divider"/>
+    <div class="sidebar-info">🤖 Model: <b>ibm/granite-4-h-small</b><br/>🌐 IBM watsonx.ai<br/>AICTE 2026 · Problem Statement 5</div>
+  </aside>
+
+  <main class="page-content">
+    <div class="glass-card">
+      <div class="card-header">💱 Currency Converter</div>
+      <div class="card-sub">Convert between major travel currencies with up-to-date mock exchange rates.</div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:1.2rem">💱 Convert Currency</h3>
+      <div class="form-grid-3" style="margin-bottom:1.2rem;align-items:flex-end">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Amount</label>
+          <input type="number" class="form-input" id="amount" value="1000" min="0" step="1" oninput="convert()"/>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">From</label>
+          <select class="form-select" id="fromCurr" onchange="convert()">
+            <option value="INR">🇮🇳 INR — Indian Rupee</option>
+            <option value="USD">🇺🇸 USD — US Dollar</option>
+            <option value="EUR">🇪🇺 EUR — Euro</option>
+            <option value="GBP">🇬🇧 GBP — British Pound</option>
+            <option value="AED">🇦🇪 AED — UAE Dirham</option>
+            <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+            <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+            <option value="THB">🇹🇭 THB — Thai Baht</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">To</label>
+          <select class="form-select" id="toCurr" onchange="convert()">
+            <option value="USD">🇺🇸 USD — US Dollar</option>
+            <option value="INR">🇮🇳 INR — Indian Rupee</option>
+            <option value="EUR">🇪🇺 EUR — Euro</option>
+            <option value="GBP">🇬🇧 GBP — British Pound</option>
+            <option value="AED">🇦🇪 AED — UAE Dirham</option>
+            <option value="SGD">🇸🇬 SGD — Singapore Dollar</option>
+            <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+            <option value="THB">🇹🇭 THB — Thai Baht</option>
+          </select>
+        </div>
+      </div>
+      <div id="resultBox" style="
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:12px;
+        padding:1.5rem;
+        text-align:center;
+        margin-bottom:0.5rem;
+      ">
+        <div style="color:var(--text-light);font-size:0.88rem;margin-bottom:0.4rem">Converted Amount</div>
+        <div id="resultValue" style="font-size:2.4rem;font-weight:800;color:var(--primary)">—</div>
+        <div id="rateInfo" style="color:var(--text-light);font-size:0.82rem;margin-top:0.4rem"></div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:1.2rem">
+      <h3 style="margin-bottom:0.3rem">📈 Live Rates (INR Base — Mock)</h3>
+      <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem">Rates are indicative mock data. Connect to a live FX API for real-time rates.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Currency</th><th>Code</th><th>Rate (per INR)</th><th>1 Unit = INR</th><th>Change (24h)</th></tr></thead>
+          <tbody>
+            <tr><td>🇺🇸 US Dollar</td><td>USD</td><td>0.01202</td><td>₹83.22</td><td style="color:var(--success)">▲ +0.12%</td></tr>
+            <tr><td>🇪🇺 Euro</td><td>EUR</td><td>0.01109</td><td>₹90.17</td><td style="color:var(--error)">▼ -0.08%</td></tr>
+            <tr><td>🇬🇧 British Pound</td><td>GBP</td><td>0.00951</td><td>₹105.15</td><td style="color:var(--success)">▲ +0.05%</td></tr>
+            <tr><td>🇦🇪 UAE Dirham</td><td>AED</td><td>0.04414</td><td>₹22.66</td><td style="color:var(--text-light)">→ 0.00%</td></tr>
+            <tr><td>🇸🇬 Singapore Dollar</td><td>SGD</td><td>0.01611</td><td>₹62.08</td><td style="color:var(--error)">▼ -0.15%</td></tr>
+            <tr><td>🇯🇵 Japanese Yen</td><td>JPY</td><td>1.8432</td><td>₹0.54</td><td style="color:var(--success)">▲ +0.22%</td></tr>
+            <tr><td>🇹🇭 Thai Baht</td><td>THB</td><td>0.4280</td><td>₹2.34</td><td style="color:var(--error)">▼ -0.06%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<a href="chatbot.html" class="chat-fab">💬</a>
+<script src="assets/main.js"></script>
+<script>
+  // Rates relative to INR
+  const RATES = { INR:1, USD:0.01202, EUR:0.01109, GBP:0.00951, AED:0.04414, SGD:0.01611, JPY:1.8432, THB:0.4280 };
+  const SYMS  = { INR:'₹', USD:'$', EUR:'€', GBP:'£', AED:'د.إ', SGD:'S$', JPY:'¥', THB:'฿' };
+
+  function convert() {
+    const amt  = parseFloat(document.getElementById('amount').value) || 0;
+    const from = document.getElementById('fromCurr').value;
+    const to   = document.getElementById('toCurr').value;
+    const inr  = amt / RATES[from];
+    const result = inr * RATES[to];
+    const rate = RATES[to] / RATES[from];
+    document.getElementById('resultValue').textContent = `${SYMS[to]}${result.toLocaleString('en-IN',{maximumFractionDigits:2})}`;
+    document.getElementById('rateInfo').textContent = `1 ${from} = ${SYMS[to]}${rate.toFixed(4)} ${to}`;
+  }
+  window.addEventListener('load', convert);
+</script>
+</body>
+</html>
